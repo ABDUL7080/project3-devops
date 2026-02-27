@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  app:
+    build: .
+    container_name: devops-project-3
+    ports:
+      - "8001:8000"
+    volumes:
+      - myvolume:/app
+    restart: always
+
+volumes:
+  myvolume:
+
+
+  
