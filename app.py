@@ -15,7 +15,7 @@ logging.basicConfig(
 @app.route("/")
 def home():
     logging.info("Homepage visited")
-    return "🚀 Project 3 - System Info App details Abdull  shaikh"
+    return "🚀 Project 3 - System Info App details Abjjdull  shaikh"
 
 @app.route("/info")
 def info():
