@@ -9,41 +9,35 @@ pipeline {
 
     stages {
 
-        stage('Clone Code') {
-            steps {
-                git branch: 'main', url: 'https://github.com/ABDUL7080/project3-devops.git'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
-                bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
             }
         }
 
         stage('Stop Old Container') {
             steps {
-                bat "docker stop %CONTAINER_NAME% || exit 0"
-                bat "docker rm %CONTAINER_NAME% || exit 0"
+                sh "docker stop ${CONTAINER_NAME} || true"
+                sh "docker rm ${CONTAINER_NAME} || true"
             }
         }
 
         stage('Deploy New Container') {
             steps {
-                bat """
-                docker run -d ^
-                -p 8001:8000 ^
-                --name %CONTAINER_NAME% ^
-                -e APP_VERSION=%IMAGE_TAG% ^
-                %IMAGE_NAME%:%IMAGE_TAG%
+                sh """
+                docker run -d \
+                -p 8001:8000 \
+                --name ${CONTAINER_NAME} \
+                -e APP_VERSION=${IMAGE_TAG} \
+                ${IMAGE_NAME}:${IMAGE_TAG}
                 """
             }
         }
 
         stage('Verify Deployment') {
             steps {
-                bat "timeout /t 5"
-                bat "curl http://localhost:8001/info"
+                sh "sleep 5"
+                sh "curl http://localhost:8001/info"
             }
         }
     }
