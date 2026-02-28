@@ -15,7 +15,7 @@ logging.basicConfig(
 @app.route("/")
 def home():
     logging.info("Homepage visited")
-    return "🚀 Project 3 - System Info App deth" \
+    return "🚀 Project 3 - System hila denge Info App deth" \
     "" \
     "" \
     "ails Abjjdull  shaikh"
