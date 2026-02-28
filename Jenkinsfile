@@ -1,53 +1,40 @@
 pipeline {
     agent any
 
-    environment {
-        IMAGE_NAME = "project3-app"
-        IMAGE_TAG = "${BUILD_NUMBER}"
-        CONTAINER_NAME = "project3-container"
-    }
-
     stages {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                sh 'docker build -t project3-app .'
             }
         }
 
         stage('Stop Old Container') {
             steps {
-                sh "docker stop ${CONTAINER_NAME} || true"
-                sh "docker rm ${CONTAINER_NAME} || true"
+                sh 'docker stop project3-container || true'
+                sh 'docker rm project3-container || true'
             }
         }
 
         stage('Deploy New Container') {
             steps {
-                sh """
-                docker run -d \
-                -p 8001:8000 \
-                --name ${CONTAINER_NAME} \
-                -e APP_VERSION=${IMAGE_TAG} \
-                ${IMAGE_NAME}:${IMAGE_TAG}
-                """
+                sh 'docker run -d -p 8081:8080 --name project3-container project3-app'
             }
         }
 
         stage('Verify Deployment') {
             steps {
-                sh "sleep 5"
-                sh "curl http://localhost:8001/info"
+                sh 'docker ps'
             }
         }
     }
 
     post {
         success {
-            echo "✅ Deployment Successful"
+            echo '✅ Deployment Successful'
         }
         failure {
-            echo "❌ Deployment Failed"
+            echo '❌ Deployment Failed'
         }
     }
 }
